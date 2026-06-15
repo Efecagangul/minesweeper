@@ -1,15 +1,31 @@
-#include <iostream>
+#include <SFML/Graphics.hpp>
 #include "MinesweeperBoard.h"
-#include "MSBoardTextView.h"
-#include "MSTextController.h"
+#include "MSSFMLView.h"
 
 int main()
 {
     MinesweeperBoard board(10, 10, EASY);
-    MSBoardTextView view(board);
-    MSTextController ctrl(board, view);
+    MSSFMLView view(board);
 
-    ctrl.play();
+    int windowWidth = board.getBoardWidth() * 32;
+    int windowHeight = board.getBoardHeight() * 32;
+
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Minesweeper");
+    window.setFramerateLimit(30);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear(sf::Color::Black);
+        view.draw(window);
+        window.display();
+    }
 
     return 0;
 }
