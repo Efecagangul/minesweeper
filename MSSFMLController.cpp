@@ -4,20 +4,24 @@ MSSFMLController::MSSFMLController(MinesweeperBoard& board) : board(board)
 {
 }
 
-void MSSFMLController::handleEvent(sf::Event& event)
+void MSSFMLController::handleEvent(const sf::Event& event)
 {
-    if (event.type == sf::Event::MouseButtonPressed)
+    if (event.is<sf::Event::MouseButtonPressed>())
     {
-        int col = event.mouseButton.x / 32;
-        int row = event.mouseButton.y / 32;
+        const auto& mouseEvent = event.getIf<sf::Event::MouseButtonPressed>();
+        if (mouseEvent)
+        {
+            int col = static_cast<int>(mouseEvent->position.x) / 32;
+            int row = static_cast<int>(mouseEvent->position.y) / 32;
 
-        if (event.mouseButton.button == sf::Mouse::Left)
-        {
-            board.revealField(row, col);
-        }
-        else if (event.mouseButton.button == sf::Mouse::Right)
-        {
-            board.toggleFlag(row, col);
+            if (mouseEvent->button == sf::Mouse::Button::Left)
+            {
+                board.revealField(row, col);
+            }
+            else if (mouseEvent->button == sf::Mouse::Button::Right)
+            {
+                board.toggleFlag(row, col);
+            }
         }
     }
 }

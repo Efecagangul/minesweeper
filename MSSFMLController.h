@@ -8,5 +8,5 @@ class MSSFMLController
 
 public:
     explicit MSSFMLController(MinesweeperBoard& board);
-    void handleEvent(sf::Event& event);
+    void handleEvent(const sf::Event& event);
 };
