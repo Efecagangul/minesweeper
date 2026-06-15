@@ -4,16 +4,27 @@
 MSSFMLView::MSSFMLView(MinesweeperBoard& board) : board(board)
 {
     font = std::make_shared<sf::Font>();
-    if (!font->openFromFile("arial.ttf"))
+    fontLoaded = false;
+    if (font->loadFromFile("arial.ttf"))
     {
-        std::cerr << "Warning: Could not load arial.ttf\n";
+        fontLoaded = true;
     }
-    
-    text = std::make_shared<sf::Text>(*font);
+    else if (font->loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"))
+    {
+        fontLoaded = true;
+    }
+    else
+    {
+        std::cerr << "Warning: Could not load arial.ttf or DejaVuSans.ttf; numbers will use fallback drawing.\n";
+    }
+
+    text = std::make_shared<sf::Text>();
+    text->setFont(*font);
     text->setCharacterSize(20);
     text->setFillColor(sf::Color::Black);
 
-    endText = std::make_shared<sf::Text>(*font);
+    endText = std::make_shared<sf::Text>();
+    endText->setFont(*font);
     endText->setCharacterSize(40);
     endText->setStyle(sf::Text::Bold);
 
@@ -58,9 +69,34 @@ void MSSFMLView::draw(sf::RenderWindow& window)
             {
                 tile.setFillColor(sf::Color(200, 200, 200));
                 window.draw(tile);
-                text->setString(std::string(1, info));
-                text->setPosition({x + 8.f, y + 2.f});
-                window.draw(*text);
+                if (fontLoaded)
+                {
+                    text->setString(std::string(1, info));
+                    text->setPosition({x + 8.f, y + 2.f});
+                    window.draw(*text);
+                }
+                else
+                {
+                    // Fallback: draw a small colored square for non-zero counts
+                    int count = info - '0';
+                    sf::RectangleShape mark(sf::Vector2f(12.f, 12.f));
+                    mark.setPosition({x + 10.f, y + 10.f});
+                    // color map for counts
+                    static const sf::Color colors[] = {
+                        sf::Color::White,
+                        sf::Color(0,0,255), // 1 - blue
+                        sf::Color(0,128,0), // 2 - green
+                        sf::Color(255,0,0), // 3 - red
+                        sf::Color(128,0,128), // 4 - purple
+                        sf::Color(128,0,0), // 5 - maroon
+                        sf::Color(64,224,208), // 6 - turquoise
+                        sf::Color(0,0,0), // 7 - black
+                        sf::Color(128,128,128) // 8 - gray
+                    };
+                    sf::Color col = (count >=1 && count <=8) ? colors[count] : sf::Color::Black;
+                    mark.setFillColor(col);
+                    window.draw(mark);
+                }
             }
         }
     }

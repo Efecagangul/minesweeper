@@ -105,6 +105,14 @@ void MinesweeperBoard::revealField(int row, int col)
             board[row][col].isRevealed = true;
             gameState = FINISHED_LOSS;
         }
+        // Reveal all mines when the game is lost so the view can show them
+        if (gameState == FINISHED_LOSS)
+        {
+            for (int r = 0; r < height; ++r)
+                for (int c = 0; c < width; ++c)
+                    if (board[r][c].hasMine)
+                        board[r][c].isRevealed = true;
+        }
     }
     else
     {

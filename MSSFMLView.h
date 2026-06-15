@@ -10,6 +10,7 @@ class MSSFMLView
     std::shared_ptr<sf::Text> text;
     std::shared_ptr<sf::Text> endText;
     sf::RectangleShape tile;
+    bool fontLoaded;
 
 public:
     explicit MSSFMLView(MinesweeperBoard& board);
