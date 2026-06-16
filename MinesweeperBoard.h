@@ -18,6 +18,7 @@ class MinesweeperBoard
     void placeRandomMines(int count);
     void placeDebugMines();
     void relocateMine(int row, int col);
+    void floodReveal(int row, int col);
 
 public:
     MinesweeperBoard();

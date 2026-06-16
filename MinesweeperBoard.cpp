@@ -117,6 +117,8 @@ void MinesweeperBoard::revealField(int row, int col)
     {
         firstMove = false;
         board[row][col].isRevealed = true;
+        if (countMines(row, col) == 0)
+            floodReveal(row, col);
     }
 
     if (gameState == RUNNING)
@@ -234,4 +236,23 @@ void MinesweeperBoard::relocateMine(int row, int col)
         c = distWidth(generator);
     } while (board[r][c].hasMine || (r == row && c == col));
     board[r][c].hasMine = true;
+}
+
+void MinesweeperBoard::floodReveal(int row, int col)
+{
+    for (int dr = -1; dr <= 1; ++dr)
+        for (int dc = -1; dc <= 1; ++dc)
+        {
+            if (dr == 0 && dc == 0) continue;
+            int nr = row + dr;
+            int nc = col + dc;
+            if (!isValidPosition(nr, nc)) continue;
+            if (board[nr][nc].isRevealed) continue;
+            if (board[nr][nc].hasFlag) continue;
+            if (board[nr][nc].hasMine) continue;
+
+            board[nr][nc].isRevealed = true;
+            if (countMines(nr, nc) == 0)
+                floodReveal(nr, nc);
+        }
 }
