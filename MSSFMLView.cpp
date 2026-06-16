@@ -77,7 +77,7 @@ void MSSFMLView::draw(sf::RenderWindow& window)
                 }
                 else
                 {
-                    // Fallback: draw a small colored square for non-zero counts
+                    // colored square for numbers
                     int count = info - '0';
                     sf::RectangleShape mark(sf::Vector2f(12.f, 12.f));
                     mark.setPosition({x + 10.f, y + 10.f});

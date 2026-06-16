@@ -1,8 +1,7 @@
 #include "MinesweeperBoard.h"
 #include <iostream>
 #include <iomanip>
-#include <cstdlib>
-#include <ctime>
+#include <random>
 #include <cmath>
 
 MinesweeperBoard::MinesweeperBoard()
@@ -189,14 +188,17 @@ void MinesweeperBoard::applyDefaultLayout()
 
 void MinesweeperBoard::placeRandomMines(int count)
 {
-    static bool seeded = false;
-    if (!seeded) { std::srand((unsigned)std::time(nullptr)); seeded = true; }
+    static std::random_device rd;
+    static std::mt19937 generator(rd());
 
     int placed = 0;
     while (placed < count)
     {
-        int r = std::rand() % height;
-        int c = std::rand() % width;
+        std::uniform_int_distribution<int> distHeight(0, height - 1);
+        std::uniform_int_distribution<int> distWidth(0, width - 1);
+        
+        int r = distHeight(generator);
+        int c = distWidth(generator);
         if (!board[r][c].hasMine)
         {
             board[r][c].hasMine = true;
@@ -219,14 +221,17 @@ void MinesweeperBoard::placeDebugMines()
 
 void MinesweeperBoard::relocateMine(int row, int col)
 {
-    static bool seeded = false;
-    if (!seeded) { std::srand((unsigned)std::time(nullptr)); seeded = true; }
+    static std::random_device rd;
+    static std::mt19937 generator(rd()); // saw it online once now its my go to for random numbers
 
     board[row][col].hasMine = false;
     int r, c;
     do {
-        r = std::rand() % height;
-        c = std::rand() % width;
+        std::uniform_int_distribution<int> distHeight(0, height - 1);
+        std::uniform_int_distribution<int> distWidth(0, width - 1);
+        
+        r = distHeight(generator);
+        c = distWidth(generator);
     } while (board[r][c].hasMine || (r == row && c == col));
     board[r][c].hasMine = true;
 }

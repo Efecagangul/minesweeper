@@ -16,7 +16,7 @@ void MSTextController::play()
         int row = -1;
         int col = -1;
 
-        // Action input with validation
+        // action input with validation
         while (true)
         {
             std::cout << "\n1: Reveal, 2: Flag, 0: Quit\nAction: ";
@@ -33,7 +33,7 @@ void MSTextController::play()
             std::cout << "Action must be 1 or 2 (or 0 to quit).\n";
         }
 
-        // Row/Col input with validation
+        //  row,c input with validation
         while (true)
         {
             std::cout << "Row: ";
